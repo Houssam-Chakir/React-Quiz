@@ -1,4 +1,4 @@
-function FinishScreen({ points, maxPoints, highScore }) {
+function FinishScreen({ points, maxPoints, highScore, dispatch }) {
   const percent = (points / maxPoints) * 100;
 
   return (
@@ -9,6 +9,7 @@ function FinishScreen({ points, maxPoints, highScore }) {
       <p className="highscore">
         Your highest score: {highScore} points
       </p>
+      <button className="btn btn-ui" onClick={()=>dispatch({type: 'restart'})}>Restart</button>
     </>
   );
 }

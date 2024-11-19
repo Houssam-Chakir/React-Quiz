@@ -31,18 +31,22 @@ function reducer(state, action) {
       return { ...state, status: "active" };
     case "newAnswer":
       const question = state.questions.at(state.index);
-      const updatedPoints = question.correctOption === action.payload ? state.points + question.points : state.points
+      const updatedPoints = question.correctOption === action.payload ? state.points + question.points : state.points;
 
-      return { ...state,
-        answer: action.payload,
-        points: state.answered ? state.points : updatedPoints,
-        answered: true
-       };
+      return { ...state, answer: action.payload, points: state.answered ? state.points : updatedPoints, answered: true };
     case "nextQuestion":
-
       return { ...state, index: state.index + 1, answer: null, answered: false };
-    case 'endQuiz':
-      return {...state, status: 'finished', highScore: state.points > state.highScore ? state.points : state.highScore}
+    case "endQuiz":
+      return { ...state, status: "finished", highScore: state.points > state.highScore ? state.points : state.highScore };
+    case "restart":
+      return {
+        ...state,
+        status: "ready",
+        index: 0,
+        answer: null,
+        answered: false,
+        points: 0,
+      };
     default:
       throw new Error("Unknown action!");
   }
@@ -54,8 +58,8 @@ export default function App() {
   const maxPoints = questions?.reduce(function (acc, curr) {
     return acc + curr.points;
   }, 0);
-  const isFinished = index === numQuestions - 1
-  console.log('isFinished: ', isFinished);
+  const isFinished = index === numQuestions - 1;
+  console.log("isFinished: ", isFinished);
 
   function fetchData() {
     fetch(`http://localhost:8000/questions`)
@@ -82,7 +86,7 @@ export default function App() {
             <NextButton dispatch={dispatch} answer={answer} isFinished={isFinished} points={points} />
           </>
         )}
-        {status === "finished" && <FinishScreen points={points} maxPoints={maxPoints} highScore={highScore} />}
+        {status === "finished" && <FinishScreen points={points} maxPoints={maxPoints} highScore={highScore} dispatch={dispatch} />}
       </Main>
     </div>
   );
